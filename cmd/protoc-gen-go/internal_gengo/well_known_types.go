@@ -16,7 +16,7 @@ import (
 // in order to support specialized build systems like Bazel that always generate
 // dynamically from the source .proto files.
 
-func genPackageKnownComment(f *fileInfo) protogen.Comments {
+func GenPackageKnownComment(f *fileInfo) protogen.Comments {
 	switch f.Desc.Path() {
 	case genid.File_google_protobuf_any_proto:
 		return ` Package anypb contains generated types for ` + genid.File_google_protobuf_any_proto + `.

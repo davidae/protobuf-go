@@ -17,7 +17,7 @@ import (
 	"google.golang.org/protobuf/types/descriptorpb"
 )
 
-func genReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo) {
+func GenReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f *fileInfo) {
 	g.P("var ", f.GoDescriptorIdent, " ", protoreflectPackage.Ident("FileDescriptor"))
 	g.P()
 
@@ -40,7 +40,7 @@ func genReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f
 			depIdxs = append(depIdxs, line)
 		}
 	}
-	genEnum := func(e *protogen.Enum, depSource string) {
+	GenEnum := func(e *protogen.Enum, depSource string) {
 		if e != nil {
 			name := e.Desc.FullName()
 			if _, ok := seen[name]; !ok {
@@ -53,7 +53,7 @@ func genReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f
 			}
 		}
 	}
-	genMessage := func(m *protogen.Message, depSource string) {
+	GenMessage := func(m *protogen.Message, depSource string) {
 		if m != nil {
 			name := m.Desc.FullName()
 			if _, ok := seen[name]; !ok {
@@ -79,10 +79,10 @@ func genReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f
 	}
 	var depOffsets []offsetEntry
 	for _, enum := range f.allEnums {
-		genEnum(enum.Enum, "")
+		GenEnum(enum.Enum, "")
 	}
 	for _, message := range f.allMessages {
-		genMessage(message.Message, "")
+		GenMessage(message.Message, "")
 	}
 	depOffsets = append(depOffsets, offsetEntry{len(depIdxs), "field type_name"})
 	for _, message := range f.allMessages {
@@ -91,33 +91,33 @@ func genReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f
 				continue
 			}
 			source := string(field.Desc.FullName())
-			genEnum(field.Enum, source+":type_name")
-			genMessage(field.Message, source+":type_name")
+			GenEnum(field.Enum, source+":type_name")
+			GenMessage(field.Message, source+":type_name")
 		}
 	}
 	depOffsets = append(depOffsets, offsetEntry{len(depIdxs), "extension extendee"})
 	for _, extension := range f.allExtensions {
 		source := string(extension.Desc.FullName())
-		genMessage(extension.Extendee, source+":extendee")
+		GenMessage(extension.Extendee, source+":extendee")
 	}
 	depOffsets = append(depOffsets, offsetEntry{len(depIdxs), "extension type_name"})
 	for _, extension := range f.allExtensions {
 		source := string(extension.Desc.FullName())
-		genEnum(extension.Enum, source+":type_name")
-		genMessage(extension.Message, source+":type_name")
+		GenEnum(extension.Enum, source+":type_name")
+		GenMessage(extension.Message, source+":type_name")
 	}
 	depOffsets = append(depOffsets, offsetEntry{len(depIdxs), "method input_type"})
 	for _, service := range f.Services {
 		for _, method := range service.Methods {
 			source := string(method.Desc.FullName())
-			genMessage(method.Input, source+":input_type")
+			GenMessage(method.Input, source+":input_type")
 		}
 	}
 	depOffsets = append(depOffsets, offsetEntry{len(depIdxs), "method output_type"})
 	for _, service := range f.Services {
 		for _, method := range service.Methods {
 			source := string(method.Desc.FullName())
-			genMessage(method.Output, source+":output_type")
+			GenMessage(method.Output, source+":output_type")
 		}
 	}
 	depOffsets = append(depOffsets, offsetEntry{len(depIdxs), ""})

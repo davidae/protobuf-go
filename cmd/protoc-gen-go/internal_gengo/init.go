@@ -47,7 +47,7 @@ func (sf *structFields) append(name string) {
 	sf.count++
 }
 
-func newFileInfo(file *protogen.File) *fileInfo {
+func NewFileInfo(file *protogen.File) *fileInfo {
 	f := &fileInfo{File: file}
 
 	// Collect all enums, messages, and extensions in "flattened ordering".
