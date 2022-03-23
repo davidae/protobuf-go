@@ -17,8 +17,8 @@ import (
 // a raw FileDescriptorProto.
 type fileRaw struct {
 	builder       Builder
-	allEnums      []Enum
-	allMessages   []Message
+	AllEnums      []Enum
+	AllMessages   []Message
 	allExtensions []Extension
 	allServices   []Service
 }
@@ -46,22 +46,22 @@ func newRawFile(db Builder) *File {
 //
 // The alloc methods "allocates" slices by pulling from the capacity.
 func (fd *File) initDecls(numEnums, numMessages, numExtensions, numServices int32) {
-	fd.allEnums = make([]Enum, 0, numEnums)
-	fd.allMessages = make([]Message, 0, numMessages)
+	fd.AllEnums = make([]Enum, 0, numEnums)
+	fd.AllMessages = make([]Message, 0, numMessages)
 	fd.allExtensions = make([]Extension, 0, numExtensions)
 	fd.allServices = make([]Service, 0, numServices)
 }
 
 func (fd *File) allocEnums(n int) []Enum {
-	total := len(fd.allEnums)
-	es := fd.allEnums[total : total+n]
-	fd.allEnums = fd.allEnums[:total+n]
+	total := len(fd.AllEnums)
+	es := fd.AllEnums[total : total+n]
+	fd.AllEnums = fd.AllEnums[:total+n]
 	return es
 }
 func (fd *File) allocMessages(n int) []Message {
-	total := len(fd.allMessages)
-	ms := fd.allMessages[total : total+n]
-	fd.allMessages = fd.allMessages[:total+n]
+	total := len(fd.AllMessages)
+	ms := fd.AllMessages[total : total+n]
+	fd.AllMessages = fd.AllMessages[:total+n]
 	return ms
 }
 func (fd *File) allocExtensions(n int) []Extension {
@@ -81,8 +81,8 @@ func (fd *File) allocServices(n int) []Service {
 // declarations matches the number that were found in the descriptor proto.
 func (fd *File) checkDecls() {
 	switch {
-	case len(fd.allEnums) != cap(fd.allEnums):
-	case len(fd.allMessages) != cap(fd.allMessages):
+	case len(fd.AllEnums) != cap(fd.AllEnums):
+	case len(fd.AllMessages) != cap(fd.AllMessages):
 	case len(fd.allExtensions) != cap(fd.allExtensions):
 	case len(fd.allServices) != cap(fd.allServices):
 	default:

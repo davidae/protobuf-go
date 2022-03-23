@@ -105,8 +105,8 @@ func (db Builder) Build() (out Out) {
 
 	fd := newRawFile(db)
 	out.File = fd
-	out.Enums = fd.allEnums
-	out.Messages = fd.allMessages
+	out.Enums = fd.AllEnums
+	out.Messages = fd.AllMessages
 	out.Extensions = fd.allExtensions
 	out.Services = fd.allServices
 

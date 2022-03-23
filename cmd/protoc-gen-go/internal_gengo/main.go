@@ -92,10 +92,10 @@ func GenerateFile(gen *protogen.Plugin, file *protogen.File) *protogen.Generated
 	for i, imps := 0, f.Desc.Imports(); i < imps.Len(); i++ {
 		GenImport(gen, g, f, imps.Get(i))
 	}
-	for _, enum := range f.allEnums {
+	for _, enum := range f.AllEnums {
 		GenEnum(g, f, enum)
 	}
-	for _, message := range f.allMessages {
+	for _, message := range f.AllMessages {
 		GenMessage(g, f, message)
 	}
 	GenExtensions(g, f)

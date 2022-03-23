@@ -22,11 +22,11 @@ func GenReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f
 	g.P()
 
 	genFileDescriptor(gen, g, f)
-	if len(f.allEnums) > 0 {
-		g.P("var ", enumTypesVarName(f), " = make([]", protoimplPackage.Ident("EnumInfo"), ",", len(f.allEnums), ")")
+	if len(f.AllEnums) > 0 {
+		g.P("var ", enumTypesVarName(f), " = make([]", protoimplPackage.Ident("EnumInfo"), ",", len(f.AllEnums), ")")
 	}
-	if len(f.allMessages) > 0 {
-		g.P("var ", messageTypesVarName(f), " = make([]", protoimplPackage.Ident("MessageInfo"), ",", len(f.allMessages), ")")
+	if len(f.AllMessages) > 0 {
+		g.P("var ", messageTypesVarName(f), " = make([]", protoimplPackage.Ident("MessageInfo"), ",", len(f.AllMessages), ")")
 	}
 
 	// Generate a unique list of Go types for all declarations and dependencies,
@@ -78,14 +78,14 @@ func GenReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f
 		name  string
 	}
 	var depOffsets []offsetEntry
-	for _, enum := range f.allEnums {
+	for _, enum := range f.AllEnums {
 		GenEnum(enum.Enum, "")
 	}
-	for _, message := range f.allMessages {
+	for _, message := range f.AllMessages {
 		GenMessage(message.Message, "")
 	}
 	depOffsets = append(depOffsets, offsetEntry{len(depIdxs), "field type_name"})
-	for _, message := range f.allMessages {
+	for _, message := range f.AllMessages {
 		for _, field := range message.Fields {
 			if field.Desc.IsWeak() {
 				continue
@@ -160,10 +160,10 @@ func GenReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f
 		g.P(initFuncName(impFile), "()")
 	}
 
-	if len(f.allMessages) > 0 {
+	if len(f.AllMessages) > 0 {
 		// Populate MessageInfo.Exporters.
 		g.P("if !", protoimplPackage.Ident("UnsafeEnabled"), " {")
-		for _, message := range f.allMessages {
+		for _, message := range f.AllMessages {
 			if sf := f.allMessageFieldsByPtr[message]; len(sf.unexported) > 0 {
 				idx := f.allMessagesByPtr[message]
 				typesVar := messageTypesVarName(f)
@@ -183,7 +183,7 @@ func GenReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f
 		g.P("}")
 
 		// Populate MessageInfo.OneofWrappers.
-		for _, message := range f.allMessages {
+		for _, message := range f.AllMessages {
 			if len(message.Oneofs) > 0 {
 				idx := f.allMessagesByPtr[message]
 				typesVar := messageTypesVarName(f)
@@ -207,17 +207,17 @@ func GenReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f
 	g.P("File: ", protoimplPackage.Ident("DescBuilder"), "{")
 	g.P("GoPackagePath: ", reflectPackage.Ident("TypeOf"), "(x{}).PkgPath(),")
 	g.P("RawDescriptor: ", rawDescVarName(f), ",")
-	g.P("NumEnums: ", len(f.allEnums), ",")
-	g.P("NumMessages: ", len(f.allMessages), ",")
+	g.P("NumEnums: ", len(f.AllEnums), ",")
+	g.P("NumMessages: ", len(f.AllMessages), ",")
 	g.P("NumExtensions: ", len(f.allExtensions), ",")
 	g.P("NumServices: ", len(f.Services), ",")
 	g.P("},")
 	g.P("GoTypes: ", goTypesVarName(f), ",")
 	g.P("DependencyIndexes: ", depIdxsVarName(f), ",")
-	if len(f.allEnums) > 0 {
+	if len(f.AllEnums) > 0 {
 		g.P("EnumInfos: ", enumTypesVarName(f), ",")
 	}
-	if len(f.allMessages) > 0 {
+	if len(f.AllMessages) > 0 {
 		g.P("MessageInfos: ", messageTypesVarName(f), ",")
 	}
 	if len(f.allExtensions) > 0 {

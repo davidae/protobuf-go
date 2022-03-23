@@ -17,12 +17,12 @@ import (
 type fileInfo struct {
 	*protogen.File
 
-	allEnums      []*enumInfo
-	allMessages   []*messageInfo
+	AllEnums      []*enumInfo
+	AllMessages   []*messageInfo
 	allExtensions []*extensionInfo
 
-	allEnumsByPtr         map[*enumInfo]int    // value is index into allEnums
-	allMessagesByPtr      map[*messageInfo]int // value is index into allMessages
+	allEnumsByPtr         map[*enumInfo]int    // value is index into AllEnums
+	allMessagesByPtr      map[*messageInfo]int // value is index into AllMessages
 	allMessageFieldsByPtr map[*messageInfo]*structFields
 
 	// needRawDesc specifies whether the generator should emit logic to provide
@@ -61,12 +61,12 @@ func NewFileInfo(file *protogen.File) *fileInfo {
 	}
 	initEnumInfos := func(enums []*protogen.Enum) {
 		for _, enum := range enums {
-			f.allEnums = append(f.allEnums, newEnumInfo(f, enum))
+			f.AllEnums = append(f.AllEnums, newEnumInfo(f, enum))
 		}
 	}
 	initMessageInfos := func(messages []*protogen.Message) {
 		for _, message := range messages {
-			f.allMessages = append(f.allMessages, newMessageInfo(f, message))
+			f.AllMessages = append(f.AllMessages, newMessageInfo(f, message))
 		}
 	}
 	initExtensionInfos := func(extensions []*protogen.Extension) {
@@ -84,17 +84,17 @@ func NewFileInfo(file *protogen.File) *fileInfo {
 	})
 
 	// Derive a reverse mapping of enum and message pointers to their index
-	// in allEnums and allMessages.
-	if len(f.allEnums) > 0 {
+	// in AllEnums and AllMessages.
+	if len(f.AllEnums) > 0 {
 		f.allEnumsByPtr = make(map[*enumInfo]int)
-		for i, e := range f.allEnums {
+		for i, e := range f.AllEnums {
 			f.allEnumsByPtr[e] = i
 		}
 	}
-	if len(f.allMessages) > 0 {
+	if len(f.AllMessages) > 0 {
 		f.allMessagesByPtr = make(map[*messageInfo]int)
 		f.allMessageFieldsByPtr = make(map[*messageInfo]*structFields)
-		for i, m := range f.allMessages {
+		for i, m := range f.AllMessages {
 			f.allMessagesByPtr[m] = i
 			f.allMessageFieldsByPtr[m] = new(structFields)
 		}

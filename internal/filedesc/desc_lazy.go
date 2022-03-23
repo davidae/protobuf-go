@@ -25,8 +25,8 @@ func (fd *File) lazyRawInit() {
 
 func (file *File) resolveMessages() {
 	var depIdx int32
-	for i := range file.allMessages {
-		md := &file.allMessages[i]
+	for i := range file.AllMessages {
+		md := &file.AllMessages[i]
 
 		// Resolve message field dependencies.
 		for j := range md.L2.Fields.List {
@@ -95,12 +95,12 @@ func (file *File) resolveServices() {
 func (file *File) resolveEnumDependency(ed pref.EnumDescriptor, i, j int32) pref.EnumDescriptor {
 	r := file.builder.FileRegistry
 	if r, ok := r.(resolverByIndex); ok {
-		if ed2 := r.FindEnumByIndex(i, j, file.allEnums, file.allMessages); ed2 != nil {
+		if ed2 := r.FindEnumByIndex(i, j, file.AllEnums, file.AllMessages); ed2 != nil {
 			return ed2
 		}
 	}
-	for i := range file.allEnums {
-		if ed2 := &file.allEnums[i]; ed2.L0.FullName == ed.FullName() {
+	for i := range file.AllEnums {
+		if ed2 := &file.AllEnums[i]; ed2.L0.FullName == ed.FullName() {
 			return ed2
 		}
 	}
@@ -113,12 +113,12 @@ func (file *File) resolveEnumDependency(ed pref.EnumDescriptor, i, j int32) pref
 func (file *File) resolveMessageDependency(md pref.MessageDescriptor, i, j int32) pref.MessageDescriptor {
 	r := file.builder.FileRegistry
 	if r, ok := r.(resolverByIndex); ok {
-		if md2 := r.FindMessageByIndex(i, j, file.allEnums, file.allMessages); md2 != nil {
+		if md2 := r.FindMessageByIndex(i, j, file.AllEnums, file.AllMessages); md2 != nil {
 			return md2
 		}
 	}
-	for i := range file.allMessages {
-		if md2 := &file.allMessages[i]; md2.L0.FullName == md.FullName() {
+	for i := range file.AllMessages {
+		if md2 := &file.AllMessages[i]; md2.L0.FullName == md.FullName() {
 			return md2
 		}
 	}
