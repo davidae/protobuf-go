@@ -303,7 +303,7 @@ func genEnumReflectMethods(g *protogen.GeneratedFile, f *fileInfo, e *enumInfo) 
 	g.P()
 }
 
-func genMessageReflectMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
+func GenMessageReflectMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 	idx := f.allMessagesByPtr[m]
 	typesVar := messageTypesVarName(f)
 

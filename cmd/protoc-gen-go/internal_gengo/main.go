@@ -325,25 +325,25 @@ func GenMessage(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 		m.Desc.Options().(*descriptorpb.MessageOptions).GetDeprecated())
 	g.P(leadingComments,
 		"type ", m.GoIdent, " struct {")
-	genMessageFields(g, f, m)
+	GenMessageFields(g, f, m)
 	g.P("}")
 	g.P()
 
-	genMessageKnownFunctions(g, f, m)
-	genMessageDefaultDecls(g, f, m)
-	genMessageMethods(g, f, m)
-	genMessageOneofWrapperTypes(g, f, m)
+	GenMessageKnownFunctions(g, f, m)
+	GenMessageDefaultDecls(g, f, m)
+	GenMessageMethods(g, f, m)
+	GenMessageOneofWrapperTypes(g, f, m)
 }
 
-func genMessageFields(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
+func GenMessageFields(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 	sf := f.allMessageFieldsByPtr[m]
-	genMessageInternalFields(g, f, m, sf)
+	GenMessageInternalFields(g, f, m, sf)
 	for _, field := range m.Fields {
-		genMessageField(g, f, m, field, sf)
+		GenMessageField(g, f, m, field, sf)
 	}
 }
 
-func genMessageInternalFields(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, sf *structFields) {
+func GenMessageInternalFields(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, sf *structFields) {
 	g.P(genid.State_goname, " ", protoimplPackage.Ident("MessageState"))
 	sf.append(genid.State_goname)
 	g.P(genid.SizeCache_goname, " ", protoimplPackage.Ident("SizeCache"))
@@ -363,7 +363,7 @@ func genMessageInternalFields(g *protogen.GeneratedFile, f *fileInfo, m *message
 	}
 }
 
-func genMessageField(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, field *protogen.Field, sf *structFields) {
+func GenMessageField(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, field *protogen.Field, sf *structFields) {
 	if oneof := field.Oneof; oneof != nil && !oneof.Desc.IsSynthetic() {
 		// It would be a bit simpler to iterate over the oneofs below,
 		// but generating the field here keeps the contents of the Go
@@ -428,9 +428,9 @@ func genMessageField(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo, fie
 	sf.append(field.GoName)
 }
 
-// genMessageDefaultDecls generates consts and vars holding the default
+// GenMessageDefaultDecls generates consts and vars holding the default
 // values of fields.
-func genMessageDefaultDecls(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
+func GenMessageDefaultDecls(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 	var consts, vars []string
 	for _, field := range m.Fields {
 		if !field.Desc.HasDefault() {
@@ -494,13 +494,13 @@ func genMessageDefaultDecls(g *protogen.GeneratedFile, f *fileInfo, m *messageIn
 	g.P()
 }
 
-func genMessageMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
-	genMessageBaseMethods(g, f, m)
-	genMessageGetterMethods(g, f, m)
-	genMessageSetterMethods(g, f, m)
+func GenMessageMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
+	GenMessageBaseMethods(g, f, m)
+	GenMessageGetterMethods(g, f, m)
+	GenMessageSetterMethods(g, f, m)
 }
 
-func genMessageBaseMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
+func GenMessageBaseMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 	// Reset method.
 	g.P("func (x *", m.GoIdent, ") Reset() {")
 	g.P("*x = ", m.GoIdent, "{}")
@@ -523,7 +523,7 @@ func genMessageBaseMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageInf
 	g.P()
 
 	// ProtoReflect method.
-	genMessageReflectMethods(g, f, m)
+	GenMessageReflectMethods(g, f, m)
 
 	// Descriptor method.
 	if m.genRawDescMethod {
@@ -540,7 +540,7 @@ func genMessageBaseMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageInf
 	}
 }
 
-func genMessageGetterMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
+func GenMessageGetterMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 	for _, field := range m.Fields {
 		genNoInterfacePragma(g, m.isTracked)
 
@@ -601,7 +601,7 @@ func genMessageGetterMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageI
 	}
 }
 
-func genMessageSetterMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
+func GenMessageSetterMethods(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 	for _, field := range m.Fields {
 		if !field.Desc.IsWeak() {
 			continue
@@ -783,9 +783,9 @@ func GenExtensions(g *protogen.GeneratedFile, f *fileInfo) {
 	}
 }
 
-// genMessageOneofWrapperTypes generates the oneof wrapper types and
+// GenMessageOneofWrapperTypes generates the oneof wrapper types and
 // associates the types with the parent message type.
-func genMessageOneofWrapperTypes(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
+func GenMessageOneofWrapperTypes(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 	for _, oneof := range m.Oneofs {
 		if oneof.Desc.IsSynthetic() {
 			continue

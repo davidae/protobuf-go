@@ -335,7 +335,7 @@ func GenPackageKnownComment(f *fileInfo) protogen.Comments {
 	}
 }
 
-func genMessageKnownFunctions(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
+func GenMessageKnownFunctions(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 	switch m.Desc.FullName() {
 	case genid.Any_message_fullname:
 		g.P("// New marshals src into a new Any instance.")
