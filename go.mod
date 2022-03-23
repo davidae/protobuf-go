@@ -1,4 +1,4 @@
-module github.com/davidae/protobuf-go
+module google.golang.org/protobuf
 
 go 1.11
 
