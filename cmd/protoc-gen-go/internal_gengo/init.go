@@ -23,7 +23,7 @@ type fileInfo struct {
 
 	allEnumsByPtr         map[*enumInfo]int    // value is index into AllEnums
 	allMessagesByPtr      map[*messageInfo]int // value is index into AllMessages
-	allMessageFieldsByPtr map[*messageInfo]*structFields
+	AllMessageFieldsByPtr map[*messageInfo]*structFields
 
 	// needRawDesc specifies whether the generator should emit logic to provide
 	// the legacy raw descriptor in GZIP'd form.
@@ -93,10 +93,10 @@ func NewFileInfo(file *protogen.File) *fileInfo {
 	}
 	if len(f.AllMessages) > 0 {
 		f.allMessagesByPtr = make(map[*messageInfo]int)
-		f.allMessageFieldsByPtr = make(map[*messageInfo]*structFields)
+		f.AllMessageFieldsByPtr = make(map[*messageInfo]*structFields)
 		for i, m := range f.AllMessages {
 			f.allMessagesByPtr[m] = i
-			f.allMessageFieldsByPtr[m] = new(structFields)
+			f.AllMessageFieldsByPtr[m] = new(structFields)
 		}
 	}
 

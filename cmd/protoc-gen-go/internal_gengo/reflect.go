@@ -164,7 +164,7 @@ func GenReflectFileDescriptor(gen *protogen.Plugin, g *protogen.GeneratedFile, f
 		// Populate MessageInfo.Exporters.
 		g.P("if !", protoimplPackage.Ident("UnsafeEnabled"), " {")
 		for _, message := range f.AllMessages {
-			if sf := f.allMessageFieldsByPtr[message]; len(sf.unexported) > 0 {
+			if sf := f.AllMessageFieldsByPtr[message]; len(sf.unexported) > 0 {
 				idx := f.allMessagesByPtr[message]
 				typesVar := messageTypesVarName(f)
 

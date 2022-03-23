@@ -336,7 +336,7 @@ func GenMessage(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
 }
 
 func GenMessageFields(g *protogen.GeneratedFile, f *fileInfo, m *messageInfo) {
-	sf := f.allMessageFieldsByPtr[m]
+	sf := f.AllMessageFieldsByPtr[m]
 	GenMessageInternalFields(g, f, m, sf)
 	for _, field := range m.Fields {
 		GenMessageField(g, f, m, field, sf)
